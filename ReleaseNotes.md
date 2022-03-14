@@ -2,6 +2,18 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V2.1.3
+
+* PassioFoodItemData nutrient are now provided as UnitMass
+* Renamed OCR to PackagedFood
+* Refactored PassioStatusListener to encorporate the download listener
+* SearchForFood now returns a mapping between the PassioID and the name of the food
+* Bug fixed and performance improvements
+
+* Number of food items recognized via HNN: 3907
+* Number of logos recognized: 300
+* Nutrition database version: passio_nutrition.3907.0.300
+
 ## V2.1.1 
 
 * Beta release of the 2.0 version of the SDK
