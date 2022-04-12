@@ -1,6 +1,6 @@
 # Passio SDK
 
-[![release](https://img.shields.io/badge/release-v2.1.3-brightgreen)](https://github.com/Passiolife/Passio-Nutrition-AI-Android-SDK-Distribution/releases/tag/v2.1.3)    [![release](https://img.shields.io/badge/platform-Android-lightgray)]() [![release](https://img.shields.io/badge/minimum--suported--version-26-lightgray)](https://developer.android.com/about/versions/oreo)  [![release](https://img.shields.io/badge/Kotlin-v1.6.10-informational)](https://github.com/JetBrains/kotlin/releases/tag/v1.6.10) [![release](https://img.shields.io/badge/codelab-Get_started-important)](https://musing-gates-4e7160.netlify.app/#0)
+[![release](https://img.shields.io/badge/release-v2.1.5-brightgreen)](https://github.com/Passiolife/Passio-Nutrition-AI-Android-SDK-Distribution/releases/tag/v2.1.5)    [![release](https://img.shields.io/badge/platform-Android-lightgray)]() [![release](https://img.shields.io/badge/minimum--suported--version-26-lightgray)](https://developer.android.com/about/versions/oreo)  [![release](https://img.shields.io/badge/Kotlin-v1.6.10-informational)](https://github.com/JetBrains/kotlin/releases/tag/v1.6.10) [![release](https://img.shields.io/badge/codelab-Get_started-important)](https://musing-gates-4e7160.netlify.app/#0)
 
 ## Overview:
 
@@ -49,16 +49,16 @@ The PassioSDKSandbox project demonstrates how to use the built in features of th
 * The sandbox project is located in the PassioSDKSandbox archive. Open it and add your developer key to this line in the `MainActivity`
 
 ```kotlin
-val config = PassioConfiguration(this.applicationContext, "Your developer key here")
-        PassioSDK.instance.configure(config) { passioStatus ->
-            when (passioStatus.mode) {
-                PassioMode.NOT_READY -> onPassioSDKError(passioStatus.debugMessage)
-                PassioMode.IS_BEING_CONFIGURED -> onPassioSDKError(passioStatus.debugMessage)
-                PassioMode.FAILED_TO_CONFIGURE -> onPassioSDKError(passioStatus.debugMessage)
-                PassioMode.IS_DOWNLOADING_MODELS -> onPassioSDKError("Auto updating")
-                PassioMode.IS_READY_FOR_DETECTION -> onPassioSDKReady()
-            }
-        }
+val config = PassioConfiguration(this.applicationContext, "Your license key here")
+PassioSDK.instance.configure(config) { passioStatus ->
+    when (passioStatus.mode) {
+        PassioMode.NOT_READY -> onPassioSDKError(passioStatus.debugMessage)
+        PassioMode.IS_BEING_CONFIGURED -> onPassioSDKError(passioStatus.debugMessage)
+        PassioMode.FAILED_TO_CONFIGURE -> onPassioSDKError(passioStatus.debugMessage)
+        PassioMode.IS_DOWNLOADING_MODELS -> onDownloadingModels()
+        PassioMode.IS_READY_FOR_DETECTION -> onPassioSDKReady()
+    }
+}
 ```
 
 * Run the PassioSDKDemo project on an Android device using Android Studio
@@ -154,18 +154,7 @@ class MainActivity : AppCompatActivity(), PassioCameraViewProvider {
 ### 3. Initialize and configure the SDK
 
 * Use the API key received from us or request a key from [support@passiolife.com](support@passiolife.com).
-* Initialize and configure the SDK directly if you have the required files in your assets folder.
-
-```kotlin
-PassioSDK.instance.configure(
-    this,
-    "Your developer key here",
-    ::onPassioSDKError,
-    ::onPassioSDKReady
-)
-```
-
-* Or initialize and configure the SDK through the `PassioSDK.Builder` if you want the SDK to download the files or the files have already been downloaded.
+* Initialize and configure the SDK through the `PassioSDK.Builder` if you want the SDK to download the files or the files have already been downloaded.
 
 ```kotlin
 val passioConfiguration = PassioConfiguration(
@@ -174,12 +163,12 @@ val passioConfiguration = PassioConfiguration(
 ).apply {
     localFiles = /* Provide list of files URIs here*/
 }
-PassioSDK.instance.configure(passioConfiguration) { passioStatus ->
+PassioSDK.instance.configure(config) { passioStatus ->
     when (passioStatus.mode) {
         PassioMode.NOT_READY -> onPassioSDKError(passioStatus.debugMessage)
         PassioMode.IS_BEING_CONFIGURED -> onPassioSDKError(passioStatus.debugMessage)
         PassioMode.FAILED_TO_CONFIGURE -> onPassioSDKError(passioStatus.debugMessage)
-        PassioMode.IS_DOWNLOADING_MODELS -> onPassioSDKError("Auto updating")
+        PassioMode.IS_DOWNLOADING_MODELS -> onDownloadingModels()
         PassioMode.IS_READY_FOR_DETECTION -> onPassioSDKReady()
     }
 }
@@ -203,7 +192,7 @@ The **mode** of the PassioStatus defines what is the current status of the confi
 enum class PassioMode {
     NOT_READY,
     IS_BEING_CONFIGURED,
-    IS_AUTO_UPDATING,
+    IS_DOWNLOADING_MODELS,
     IS_READY_FOR_NUTRITION,
     IS_READY_FOR_DETECTION
 }
@@ -275,5 +264,5 @@ override fun onStop() {
 
 * To enable Passio Images for foods include the file passioicons.aar to the project by following the same steps that were taken to include the sdk's .aar file.
 
-<sup>Copyright 2020 Passio Inc</sup>
+<sup>Copyright 2022 Passio Inc</sup>
 

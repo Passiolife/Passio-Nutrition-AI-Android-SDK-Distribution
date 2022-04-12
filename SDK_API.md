@@ -1,42 +1,129 @@
 # Passio SDK API
 
-## Version 0.12.0
+## Version 2.1.5
 
 ```kotlin
+
+/**
+ * The identifier of a food item located in the nutritional
+ * database.
+ */
 typealias PassioID = String
 
-typealias UPCCode = String
+/**
+ * String that represents the code of barcode types FORMAT_EAN_13,
+ * FORMAT_EAN_8, FORMAT_UPC_E and FORMAT_UPC_A.
+ */
 typealias Barcode = String
-typealias OCRCode = String
 
-typealias FileName = String
+/**
+ * String that represents the barcode of a packaged food that is
+ * recognized using the image of the packaging.
+ */
+typealias PackagedFoodCode = String
 
+internal typealias VotedCandidate = ObjectDetectionCandidate
+
+/**
+ * Data class that represents the results of the SDK's detection process.
+ */
 data class FoodCandidates(
+    /**
+     * Result of the food detection process.
+     */
     val detectedCandidates: List<DetectedCandidate>? = null,
-    val logoCandidates: List<ObjectDetectionCandidate>? = null,
+    /**
+     * Result of the barcode detection process.
+     */
     val barcodeCandidates: List<BarcodeCandidate>? = null,
-    val ocrCandidates: List<OCRCode>? = null
+    /**
+     * Results of the ocr detection process.
+     */
+    val packagedFoodCandidates: List<PackagedFoodCandidate>? = null
 )
 
-class DetectedCandidate(
+/**
+ * Class that represents the results of the food detection process.
+ */
+open class DetectedCandidate(
+    /**
+     * The id used to query the nutritional database.
+     */
     val passioID: PassioID,
+    /**
+     * Percentage of the neural network confidence level. Ranges from 0f - 1f or 0% to 100%.
+     */
     val confidence: Float,
+    /**
+     * Relative coordinates of the object detected on an image. Using
+     * [PassioSDK.boundingBoxToViewTransform] will determine the correct coordinates in coordinate
+     * system of current view hierarchy.
+     */
     val boundingBox: RectF,
+    /**
+     * Represents a part of the original image that the classification process has been ran on.
+     */
     val croppedImage: Bitmap?
 )
 
+/**
+ * Represents the result of the classification process.
+ */
 open class ClassificationCandidate(var passioID: PassioID, val confidence: Float)
 
+/**
+ * Represents the result of the packaged food detection
+ * process.
+ */
+data class PackagedFoodCandidate(
+    val packagedFoodCode: PackagedFoodCode,
+    val confidence: Float
+)
+
+/**
+ * Represents the result of the object detection process.
+ */
 class ObjectDetectionCandidate(
     passioID: PassioID,
     confidence: Float,
     val boundingBox: RectF
-) : ClassificationCandidate(passioID, confidence)
+) : ClassificationCandidate(passioID, confidence) {
 
+    override fun toString(): String {
+        return "passioID: $passioID, " +
+                "confidence: $confidence, " +
+                "boundingBox: ${boundingBox.toShortString()}"
+    }
+}
 
-data class BarcodeCandidate(val barcode: Barcode, val boundingBox: RectF)
+/**
+ * Data class that represents the results of the barcode detection process.
+ */
+data class BarcodeCandidate(
+    /**
+     * Barcode string used to fetch nutritional information using the
+     * [PassioSDK.fetchPassioIDAttributesForBarcode] method.
+     */
+    val barcode: Barcode,
+    /**
+     * The bounding box of the detected barcode, in absolute coordinates.
+     */
+    val boundingBox: RectF
+)
 
+/**
+ * Interface that serves as a callback for the [PassioSDK.startFoodDetection] method.
+ */
 interface FoodRecognitionListener {
+
+    /**
+     * Callback method for the food detection process.
+     *
+     * @param candidates top level object that represents all of the detection results based on the
+     *        configuration of the detection session.
+     * @param image that represents the camera frame that the recognition was ran on.
+     * @param nutritionFacts recognized nutrition facts for the camera frame.
+     */
     fun onRecognitionResults(
         candidates: FoodCandidates,
         image: Bitmap?,
@@ -44,39 +131,90 @@ interface FoodRecognitionListener {
     )
 }
 
-interface ObjectDetectionListener {
+/**
+ * Registering this callback gives the ability to
+ * receive the results of the object detection
+ * process.
+ */
+internal interface ObjectDetectionListener {
     fun onObjectDetectionResult(candidates: List<ObjectDetectionCandidate>)
 }
 
-interface ClassificationListener {
+/**
+ * Registering this callback gives the ability to
+ * receive the results of the classification
+ * process.
+ */
+internal interface ClassificationListener {
     fun onClassificationResult(candidates: List<ClassificationCandidate>)
 }
 
-interface BarcodeDetectionListener {
-    fun onBarcodeResult(barcodes: List<BarcodeCandidate>)
-}
+/**
+ * Callback interface used to receive information about
+ * the SDK's configuration process.
+ */
+interface PassioStatusListener {
+    /**
+     * Every time the SDK's configuration process changes
+     * a state, a new event will be emitted with the
+     * current [PassioStatus].
+     */
+    fun onPassioStatusChanged(status: PassioStatus)
 
-interface OCRListener {
-    fun onTextDetected(detectedText: String)
-    fun onOCRResult(detectedOCRCode: OCRCode?, confidence: Float)
-}
-
-interface PassioDownloadListener {
+    /**
+     * Will be called once all of the files are downloaded.
+     * This doesn't mean that the SDK will immediately run
+     * the newly downloaded files.
+     */
     fun onCompletedDownloadingAllFiles(fileUris: List<Uri>)
+
+    /**
+     * Signals the completion of the download process for a
+     * single files. This method also informs how many files
+     * are still left in the download queue.
+     */
     fun onCompletedDownloadingFile(fileUri: Uri, filesLeft: Int)
+
+    /**
+     * If a certain file cannot be downloaded, [onDownloadError]
+     * will be invoked with the download error message attached.
+     */
     fun onDownloadError(message: String)
 }
 
-interface PassioStatusListener {
-    fun onPassioStatusChanged(status: PassioStatus)
-}
-
 private const val MINIMUM_CONFIDENCE_TF_OD_API = 0.33f
 
-private const val MINIMUM_CONFIDENCE_TF_OD_API = 0.33f
-
+/**
+ * Main access point of the SDK. Defines all of the SDK's
+ * main capabilities. The API of the SDK is designed as a
+ * singleton with the [instance] containing the concrete
+ * implementation of the interface. The SDK is design to
+ * be called from the main thread. The execution of most
+ * of its functions will be delegated to an internal
+ * thread pool, but the resulting callback will always be
+ * invoked on the main thread.
+ */
 interface PassioSDK {
 
+    /**
+     * Defines the processing speed of the SDK's camera
+     * recognition system.
+     * ONE - indicates that one frame will be analyzed
+     *       every second. If the analysis time of that
+     *       frame exceeds time of a second, the next
+     *       frame will be analyzed only after the
+     *       previous one has been complete.
+     * TWO - indicates that one frame will be analyzed
+     *       every 500 milliseconds. This is the default
+     *       behaviour of the SDK.
+     * MAX - there is no possible waiting period between
+     *       the analysis of two frames. As soon as the
+     *       recognition system is done with the previous
+     *       frame, the analysis of the next one is called.
+     *       This mode might is computational heavy
+     *       and might take up a lot of processing power
+     *       of the system.
+     */
     enum class FramesPerSecond {
         ONE,
         TWO,
@@ -84,6 +222,16 @@ interface PassioSDK {
     }
 
     companion object {
+        const val BARCODE_PREFIX = "barcode"
+        const val PACKAGED_FOOD_PREFIX = "packaged"
+        const val BKG_PASSIO_ID = "BKG0001"
+
+        private var internalInstance: PassioSDK? = null
+
+        /**
+         * Use this singleton to access the Passio SDK.
+         */
+        @JvmStatic
         val instance: PassioSDK
             get() {
                 if (internalInstance == null) {
@@ -91,6 +239,12 @@ interface PassioSDK {
                 }
                 return internalInstance!!
             }
+
+        /**
+         * The value of confidence of recognition results below which results won't be returned
+         * to the user. The default value is 0.5.
+         */
+        fun minimumConfidence() = MINIMUM_CONFIDENCE_TF_OD_API
     }
 
     /**
@@ -129,8 +283,8 @@ interface PassioSDK {
      *        successful.
      */
     fun configure(
-        context: Context,
-        developerKey: String,
+        appContext: Context,
+        key: String,
         onSDKError: (errorMessage: String) -> Unit,
         onSDKReady: () -> Unit = {}
     )
@@ -230,6 +384,13 @@ interface PassioSDK {
         onDetectionCompleted: (candidates: FoodCandidates?) -> Unit
     )
 
+    fun lookupIconFor(
+        context: Context,
+        passioID: PassioID,
+        iconSize: IconSize = IconSize.PX90,
+        type: PassioIDEntityType = PassioIDEntityType.item,
+    ): Pair<Drawable, Boolean>
+
     /**
      * For a given [PassioID] returns the corresponding image from the SDK's asset folder.
      *
@@ -237,18 +398,12 @@ interface PassioSDK {
      * @param passioID key to find the image
      * @return if the [passioID] is valid returns the [Drawable] from the assets. If not returns null.
      */
-    fun lookupImageFor(context: Context, passioID: PassioID): Drawable?
-
-    /**
-     * For a given [imageName] returns the corresponding image from the SDK's asset folder.
-     *
-     * @param context used to open assets
-     * @param imageName name of the image resource
-     * @return if the image with the given [imageName] exists returns the [Drawable] from the assets.
-     *         If not returns null.
-     */
-    fun lookupImageForFilename(context: Context, imageName: String): Drawable?
-
+    fun fetchIconFor(
+        context: Context,
+        passioID: PassioID,
+        iconSize: IconSize = IconSize.PX90,
+        callback: (drawable: Drawable?) -> Unit
+    )
     /**
      * For a given [PassioID] returns the name of corresponding food item.
      *
@@ -262,31 +417,20 @@ interface PassioSDK {
      * For a given [PassioID] returns the [PassioIDAttributes] of that food item.
      *
      * @param passioID the ID of the food item
-     * @return attributes object that represent all of the nutritional data the SDK has on a food
+     * @return attributes object that represents all of the nutritional data the SDK has on a food
      *         item corresponding to the passioID, null otherwise.
      */
     fun lookupPassioAttributesFor(passioID: PassioID): PassioIDAttributes?
 
+    /**
+     * For a given food item [name] returns the [PassioIDAttributes]
+     * of that food item.
+     *
+     * @param name of the food item
+     * @return attributes object that represents all of the nutritional data the SDK
+     *         item corresponding to the food item name, null otherwise.
+     */
     fun lookupPassioAttributesForName(name: String): PassioIDAttributes?
-
-    /**
-     * For a given food item name returns the [PassioID] if the item exists in the SDK's nutritional
-     * database. If it doesn't exist returns null.
-     *
-     * @param name the name of the food
-     * @return [PassioID] of the food from the nutritional database, null otherwise.
-     */
-    fun lookupPassioIDFor(name: String): PassioID?
-
-    /**
-     * For a given [PassioID] returns a list of all the alternatives for this food items. That list
-     * includes parent and children food items.
-     *
-     * @param passioID the ID of the food item
-     * @return list of all of the hierarchically connected [PassioID]s of the food item that
-     *         corresponds to the given passioID, null otherwise.
-     */
-    fun lookupAlternativesFor(passioID: PassioID): List<PassioID>?
 
     /**
      * For a given [passioID] returns a list that contains the subtree of the food hierarchy that
@@ -298,55 +442,61 @@ interface PassioSDK {
     fun lookupAllDescendantsFor(passioID: PassioID): List<PassioID>?
 
     /**
-     * For a given [passioID] returns a list that contains all of the nodes the food hierarchy that
-     * have the same parent as of the food item of the [passioID].
+     * Search functions that uses the given [byText] to cross reference
+     * the names of the food items in the nutritional database.
      *
-     * @param passioID the ID of the food item
-     * @return list that represents the siblings of the given [passioID], null otherwise.
+     * @param byText the string used to query the database
+     * @return list of all of the [PassioID]s with the corresponding
+     *         names of the food items.
      */
-    fun lookupAllSiblingsFor(passioID: PassioID): List<PassioID>?
+    fun searchForFood(byText: String): List<Pair<PassioID, String>>
 
     /**
-     * For a given [passioID] returns a list that contains all of the nodes the food hierarchy that
-     * have the same parent as of the food item of the [passioID].
+     * For a given [Barcode] creates a networking call to Passio's
+     * backend that tries to fetch the corresponding [PassioIDAttributes].
      *
-     * @param passioID the ID of the food item
-     * @return list that represents the siblings of the given [passioID], null otherwise.
+     * @param barcode the barcode string of the packaged food.
+     * @param onAttributesFetched callback function that will return the
+     *                            PassioIDAttributes if that packaged food
+     *                            is enlisted on Passio's backend.
      */
-    fun lookupParentFor(passioID: PassioID): PassioID?
-
-    /**
-     * Returns a list of all food items from the nutritional database.
-     */
-    fun lookupAllFoodItemsInDatabase(): List<String>
-
-
-    /**
-     * Returns a list of all [PassioID]s from the nutritional database.
-     */
-    fun lookupAllPassioIDs(): Map<PassioID, String>
-
-    /**
-     * Returns a list of all [PassioID]s that can be recognized by our recognition engine.
-     */
-    fun lookupAllVisuallyRecognizableFoodItems(): List<String>
-
-    fun searchForFood(byText: String): List<String>
-
     fun fetchPassioIDAttributesForBarcode(
         barcode: Barcode,
         onAttributesFetched: (passioIDAttributes: PassioIDAttributes?) -> Unit
     )
 
-    fun fetchPassioIDAttributesForOCRCode(
-        ocrcode: OCRCode,
+    /**
+     * For a given [PackagedFoodCode] creates a networking call to Passio's
+     * backend that tries to fetch the corresponding [PassioIDAttributes].
+     *
+     * @param packagedFoodCode the barcode string of the packaged food.
+     * @param onAttributesFetched callback function that will return the
+     *                            PassioIDAttributes if that packaged food
+     *                            is enlisted on Passio's backend.
+     */
+    fun fetchPassioIDAttributesForPackagedFood(
+        packagedFoodCode: PackagedFoodCode,
         onAttributesFetched: (passioIDAttributes: PassioIDAttributes?) -> Unit
     )
 
-    fun setDownloadListener(downloadListener: PassioDownloadListener?)
+    /**
+     * If not null, the [PassioStatusListener] will provide callbacks
+     * when the internal state of the SDK's configuration process changes.
+     * Passing null will unregister the listener.
+     */
+    fun setPassioStatusListener(statusListener: PassioStatusListener?)
 
-    fun setStatusListener(statusListener: PassioStatusListener?)
-
+    /**
+     * Transforms the bounding box of the camera frame to the coordinates
+     * of the preview view where it should be displayed.
+     *
+     * @param boundingBox the bounding box from the ObjectDetectionCandidate.
+     * @param viewWidth the width of the camera preview view.
+     * @param viewHeight the height of the camera preview view.
+     * @param displayAngle the rotation of the camera preview view.
+     * @param barcode does the bounding box belong to the barcode candidate.
+     * @return the bounding box within the coordinate system of the camera view.
+     */
     fun boundingBoxToViewTransform(
         boundingBox: RectF,
         viewWidth: Int,
@@ -354,8 +504,7 @@ interface PassioSDK {
         displayAngle: Int = 0,
         barcode: Boolean = false
     ): RectF
-
 }
 ```
 
-<sup>Copyright 2020 Passio Inc</sup>
+<sup>Copyright 2022 Passio Inc</sup>

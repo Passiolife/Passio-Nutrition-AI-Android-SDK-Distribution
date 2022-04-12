@@ -2,6 +2,31 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V2.1.5
+
+* Refactored the lookupIconFor function and split it into two functionalities:
+1. Function that does a local lookup of the icon. Returns an actual icon of the food, in which case the second parameter of the result will be true. Or returns the default icon for the food type with the second parameter of the pair being false
+```kotlin
+fun lookupIconFor(
+    context: Context,
+    passioID: PassioID,
+    iconSize: IconSize = IconSize.PX90,
+    type: PassioIDEntityType = PassioIDEntityType.item,
+): Pair<Drawable, Boolean>
+```
+2. Function that fetches the icon from Passio's backend and caches it. The next lookupIconFor call for returned the cached image from the networking call.
+```kotlin
+fun fetchIconFor(
+    context: Context,
+    passioID: PassioID,
+    iconSize: IconSize = IconSize.PX90,
+    callback: (drawable: Drawable?) -> Unit
+)
+```
+
+* Number of food items recognized via HNN: 4049
+* Nutrition database version: passio_nutrition.4049.0.300
+
 ## V2.1.3
 
 * PassioFoodItemData nutrient are now provided as UnitMass
