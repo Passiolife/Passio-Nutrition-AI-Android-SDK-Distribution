@@ -2,6 +2,18 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V2.2.1
+
+* Fix issue with alcohol nutrition mapping
+* Refactored search function to asynchronously return the list of results. Internally improved the search algorithm to work with small typos
+
+```kotlin
+fun searchForFood(
+        byText: String,
+        callback: (result: List<Pair<PassioID, String>>) -> Unit
+)
+```
+
 ## V2.1.5
 
 * Refactored the lookupIconFor function and split it into two functionalities:

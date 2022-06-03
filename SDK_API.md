@@ -404,6 +404,7 @@ interface PassioSDK {
         iconSize: IconSize = IconSize.PX90,
         callback: (drawable: Drawable?) -> Unit
     )
+
     /**
      * For a given [PassioID] returns the name of corresponding food item.
      *
@@ -449,7 +450,10 @@ interface PassioSDK {
      * @return list of all of the [PassioID]s with the corresponding
      *         names of the food items.
      */
-    fun searchForFood(byText: String): List<Pair<PassioID, String>>
+    fun searchForFood(
+        byText: String,
+        callback: (result: List<Pair<PassioID, String>>) -> Unit
+    )
 
     /**
      * For a given [Barcode] creates a networking call to Passio's
