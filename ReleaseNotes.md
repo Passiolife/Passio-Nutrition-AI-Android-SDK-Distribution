@@ -2,6 +2,11 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V2.2.2
+
+* No API changes
+* Fixed internal services
+
 ## V2.2.1
 
 * Fix issue with alcohol nutrition mapping
