@@ -2,6 +2,19 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V2.2.7
+
+* Renamed the .aar file to determine which Kotlin version it supports.
+* Introduced compatiblity .aar that supports Kotlin version 1.4.21.
+* New dependency has to be added to build the project:
+
+```groovy
+dependencies {
+    ...
+    implementation 'org.tensorflow:tensorflow-lite-metadata:0.4.0'
+}
+```
+
 ## V2.2.5
 
 * No API changes
