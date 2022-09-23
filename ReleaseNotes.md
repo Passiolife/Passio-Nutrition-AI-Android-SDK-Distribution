@@ -2,6 +2,10 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V2.2.9
+
+* No API changes
+
 ## V2.2.7
 
 * Renamed the .aar file to determine which Kotlin version it supports.
