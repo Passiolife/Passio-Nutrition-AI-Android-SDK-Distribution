@@ -1,8 +1,9 @@
 # Passio SDK API
 
-## Version 2.1.5
+## Version 2.2.11
 
 ```kotlin
+
 
 /**
  * The identifier of a food item located in the nutritional
@@ -132,24 +133,6 @@ interface FoodRecognitionListener {
 }
 
 /**
- * Registering this callback gives the ability to
- * receive the results of the object detection
- * process.
- */
-internal interface ObjectDetectionListener {
-    fun onObjectDetectionResult(candidates: List<ObjectDetectionCandidate>)
-}
-
-/**
- * Registering this callback gives the ability to
- * receive the results of the classification
- * process.
- */
-internal interface ClassificationListener {
-    fun onClassificationResult(candidates: List<ClassificationCandidate>)
-}
-
-/**
  * Callback interface used to receive information about
  * the SDK's configuration process.
  */
@@ -181,6 +164,7 @@ interface PassioStatusListener {
      */
     fun onDownloadError(message: String)
 }
+
 
 private const val MINIMUM_CONFIDENCE_TF_OD_API = 0.33f
 
@@ -361,13 +345,13 @@ interface PassioSDK {
     fun startFoodDetection(
         foodRecognitionListener: FoodRecognitionListener,
         detectionConfig: FoodDetectionConfiguration = FoodDetectionConfiguration()
-    )
+    ): Boolean
 
     /**
      * Stops the food detection process. After this method is called no results should be delivered
      * to a previously registered [FoodRecognitionListener].
      */
-    fun stopFoodDetection()
+    fun stopFoodDetection(): Boolean
 
     /**
      * Runs object detection on a given [Bitmap]. The process will run on the same background
@@ -382,7 +366,7 @@ interface PassioSDK {
         bitmap: Bitmap,
         foodDetectionConfiguration: FoodDetectionConfiguration? = null,
         onDetectionCompleted: (candidates: FoodCandidates?) -> Unit
-    )
+    ): Boolean
 
     fun lookupIconFor(
         context: Context,

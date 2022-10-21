@@ -2,6 +2,14 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V2.2.11
+
+### API changes:
+* ```startFoodDetection``` now returns Boolean. The function will return false if the registration of the ```foodRecognitionListener``` failed.
+* ```stopFoodDetection``` now returns Boolean. The function will return false if the unregistration of the current ```foodRecognitionListener``` failed.
+* ```detectFoodIn``` now returns Boolean. The function will return false if the SDK is not configured and it can't run the detection process of the given Bitmap.
+
+
 ## V2.2.9
 
 * No API changes
