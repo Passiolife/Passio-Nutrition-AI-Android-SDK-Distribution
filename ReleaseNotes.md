@@ -2,6 +2,10 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V2.2.13
+
+* No API changes
+
 ## V2.2.11
 
 ### API changes:
