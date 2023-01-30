@@ -1,6 +1,6 @@
 # Passio SDK
 
-[![release](https://img.shields.io/badge/release-v2.2.13-brightgreen)](https://github.com/Passiolife/Passio-Nutrition-AI-Android-SDK-Distribution/releases/tag/v2.2.13)    [![release](https://img.shields.io/badge/platform-Android-lightgray)]() [![release](https://img.shields.io/badge/minimum--suported--version-26-lightgray)](https://developer.android.com/about/versions/oreo)  [![release](https://img.shields.io/badge/Kotlin-v1.6.10-informational)](https://github.com/JetBrains/kotlin/releases/tag/v1.6.10) [![release](https://img.shields.io/badge/codelab-Get_started-important)](https://musing-gates-4e7160.netlify.app/#0)
+[![release](https://img.shields.io/badge/release-v2.2.17-brightgreen)](https://github.com/Passiolife/Passio-Nutrition-AI-Android-SDK-Distribution/releases/tag/v2.2.17)    [![release](https://img.shields.io/badge/platform-Android-lightgray)]() [![release](https://img.shields.io/badge/minimum--suported--version-26-lightgray)](https://developer.android.com/about/versions/oreo)  [![release](https://img.shields.io/badge/Kotlin-v1.6.10-informational)](https://github.com/JetBrains/kotlin/releases/tag/v1.6.10) [![release](https://img.shields.io/badge/codelab-Get_started-important)](https://musing-gates-4e7160.netlify.app/#0)
 
 ## Overview:
 
@@ -104,16 +104,16 @@ dependencies {
     implementation 'org.tensorflow:tensorflow-lite-metadata:0.4.0'
 
     // CameraX
-    def camerax_version = "1.1.0-alpha12"
+    def camerax_version = "1.3.0-alpha12"
     implementation "androidx.camera:camera-core:$camerax_version"
     implementation "androidx.camera:camera-camera2:$camerax_version"
     implementation "androidx.camera:camera-lifecycle:$camerax_version"
-    implementation 'androidx.camera:camera-view:1.0.0-alpha32'
-    implementation 'androidx.camera:camera-extensions:1.0.0-alpha32'
+    implementation 'androidx.camera:camera-view:1.3.0-alpha02'
+    implementation 'androidx.camera:camera-extensions:1.3.0-alpha02'
 
     // Barcode and OCR
-    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:17.0.1'
-    implementation 'com.google.android.gms:play-services-mlkit-barcode-scanning:17.0.0'
+    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.2'
+    implementation 'com.google.android.gms:play-services-mlkit-barcode-scanning:18.1.0'
     ...
 }
 ```

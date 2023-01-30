@@ -2,6 +2,24 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V2.2.17
+
+### Dependency changes:
+* Updated CameraX and MLKit versions (Kotlin version 1.6.10)
+```
+// CameraX
+def camerax_version = "1.3.0-alpha12"
+implementation "androidx.camera:camera-core:$camerax_version"
+implementation "androidx.camera:camera-camera2:$camerax_version"
+implementation "androidx.camera:camera-lifecycle:$camerax_version"
+implementation 'androidx.camera:camera-view:1.3.0-alpha02'
+implementation 'androidx.camera:camera-extensions:1.3.0-alpha02'
+
+// Barcode and OCR
+implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.2'
+implementation 'com.google.android.gms:play-services-mlkit-barcode-scanning:18.1.0'
+```
+
 ## V2.2.13
 
 * No API changes
