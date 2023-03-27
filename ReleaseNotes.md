@@ -2,6 +2,10 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V2.2.21
+
+* No API Changes
+
 ## V2.2.19
 
 * Added advanced search flag in ```PassioConfiguration``` market as an experimental feature:
