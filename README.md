@@ -34,9 +34,9 @@ By default the SDK does not record/store any photos or videos. Instead, as the e
 * The SDK requires access to the device's camera
 * The SDK is built upon CameraX, TensorFlow and Firebase's ML Vision so these dependencies will need to be added to the project manually
 
-## CodeLab
+## Gitbook
 
-There is a [CodeLab](https://musing-gates-4e7160.netlify.app/#6) you can follow to integrate the SDK and scan your first meal. It has a detailed explanation of the SDK's API and of the structure of the Sandbox App.
+There is a [Gitbook documentation](https://passio.gitbook.io/nutrition-ai/guides/android-sdk-docs/getting-started) you can follow to integrate the SDK and scan your first meal. It has a detailed explanation of the SDK's API and of the structure of the Sandbox App.
 
 ## Getting Started
 
@@ -256,9 +256,5 @@ override fun onStop() {
 
 * For a simple way to use the camera functionality of the SDK, extend the `PassioCameraFragment`. It contains the logic to ask for the camera permission, and if granted, start the camera preview. An example of the PassioCameraFragment can be seen in the `FoodRecognizerFragment` of the PassioSDKDemo project.
 
-## Enabling Passio images
-
-* To enable Passio Images for foods include the file passioicons.aar to the project by following the same steps that were taken to include the sdk's .aar file.
-
-<sup>Copyright 2022 Passio Inc</sup>
+<sup>Copyright 2023 Passio Inc</sup>
 
