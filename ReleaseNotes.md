@@ -2,6 +2,11 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V2.3.0
+
+* Removed the support for Kotlin version 1.4.21
+* Now publishing only one sdk file named passiolib-release.aar
+
 ## V2.2.23
 
 * No API Changes

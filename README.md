@@ -1,6 +1,6 @@
 # Passio SDK
 
-[![release](https://img.shields.io/badge/release-v2.2.23-brightgreen)](https://github.com/Passiolife/Passio-Nutrition-AI-Android-SDK-Distribution/releases/tag/v2.2.23)    [![release](https://img.shields.io/badge/platform-Android-lightgray)]() [![release](https://img.shields.io/badge/minimum--suported--version-26-lightgray)](https://developer.android.com/about/versions/oreo)  [![release](https://img.shields.io/badge/Kotlin-v1.6.10-informational)](https://github.com/JetBrains/kotlin/releases/tag/v1.6.10) [![release](https://img.shields.io/badge/codelab-Get_started-important)](https://musing-gates-4e7160.netlify.app/#0)
+[![release](https://img.shields.io/badge/release-v2.3.0-brightgreen)](https://github.com/Passiolife/Passio-Nutrition-AI-Android-SDK-Distribution/releases/tag/v2.3.0)    [![release](https://img.shields.io/badge/platform-Android-lightgray)]() [![release](https://img.shields.io/badge/minimum--suported--version-26-lightgray)](https://developer.android.com/about/versions/oreo)  [![release](https://img.shields.io/badge/Kotlin-v1.6.10-informational)](https://github.com/JetBrains/kotlin/releases/tag/v1.6.10) [![release](https://img.shields.io/badge/codelab-Get_started-important)](https://musing-gates-4e7160.netlify.app/#0)
 
 ## Overview:
 
@@ -24,12 +24,12 @@ By default the SDK does not record/store any photos or videos. Instead, as the e
 
 ## Before you continue:
 
-1. You can download the appropriate aar from PassioSDK's [releases page](https://github.com/Passiolife/Passio-Nutrition-AI-Android-SDK-Distribution/releases). There are two .aar files in the release, one for Kotlin version 1.4.21 and one for 1.6.10, depending on which version of Kotlin is being used in your project. 
+1. You can download the appropriate aar from PassioSDK's [releases page](https://github.com/Passiolife/Passio-Nutrition-AI-Android-SDK-Distribution/releases).
 3. Make sure you receive your developer key from Passio.
 
 ## Minimum Requirements And Dependencies
 
-* Built with Kotlin version 1.4.21 and 1.6.10
+* Built with Kotlin version 1.6.10
 * Minimum Android SDK version is 26
 * The SDK requires access to the device's camera
 * The SDK is built upon CameraX, TensorFlow and Firebase's ML Vision so these dependencies will need to be added to the project manually
