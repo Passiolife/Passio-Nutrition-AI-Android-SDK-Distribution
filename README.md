@@ -1,6 +1,6 @@
 # Passio SDK
 
-[![release](https://img.shields.io/badge/release-v2.3.0-brightgreen)](https://github.com/Passiolife/Passio-Nutrition-AI-Android-SDK-Distribution/releases/tag/v2.3.0)    [![release](https://img.shields.io/badge/platform-Android-lightgray)]() [![release](https://img.shields.io/badge/minimum--suported--version-26-lightgray)](https://developer.android.com/about/versions/oreo)  [![release](https://img.shields.io/badge/Kotlin-v1.6.10-informational)](https://github.com/JetBrains/kotlin/releases/tag/v1.6.10) [![release](https://img.shields.io/badge/codelab-Get_started-important)](https://musing-gates-4e7160.netlify.app/#0)
+[![release](https://img.shields.io/badge/release-v2.3.1-brightgreen)](https://github.com/Passiolife/Passio-Nutrition-AI-Android-SDK-Distribution/releases/tag/v2.3.1)    [![release](https://img.shields.io/badge/platform-Android-lightgray)]() [![release](https://img.shields.io/badge/minimum--suported--version-26-lightgray)](https://developer.android.com/about/versions/oreo)  [![release](https://img.shields.io/badge/Kotlin-v1.6.10-informational)](https://github.com/JetBrains/kotlin/releases/tag/v1.6.10) [![release](https://img.shields.io/badge/codelab-Get_started-important)](https://musing-gates-4e7160.netlify.app/#0)
 
 ## Overview:
 
@@ -76,22 +76,6 @@ PassioSDK.instance.configure(config) { passioStatus ->
 
   ![path to aar](./readme_images/find_path_to_aar.png)
 
-* Once the aar file is imported couple of changes to your app/build.gradle file are needed. Add the following:
-
-```
-android {
-    ...
-    aaptOptions {
-        noCompress "passiosecure"
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    ...
-}
-```
-
 * Also, add the dependency to the passiolib module, CameraX, Tensorflow and Firebase Vision
 ```
 dependencies {
@@ -126,6 +110,7 @@ dependencies {
 * To enable the camera add a androidx.camera.view.PreviewView to you view hierarchy. This view will render the frames coming out of the camera manager that are meant for the preview.
 * Implement the `CameraViewProvider` interface through an Activity, Fragment or a View which will server as a lifecycle owner for the camera.
 * Calling the `startCamera` method starts the camera.
+* Calling the `stopCamera` will stop the camera and release the lifecycle owner reference.
 
 ```kotlin
 class MainActivity : AppCompatActivity(), PassioCameraViewProvider {
@@ -143,6 +128,12 @@ class MainActivity : AppCompatActivity(), PassioCameraViewProvider {
     private fun init() {
         PassioSDK.instance.startCamera(this)
         ...
+    }
+
+    // Stop camera
+    override fun onDestroy() {
+        super.onDestroyView()
+        PassioSDK.instance.stopCamera()
     }
 }
 ```
@@ -187,9 +178,9 @@ The **mode** of the PassioStatus defines what is the current status of the confi
 ```kotlin
 enum class PassioMode {
     NOT_READY,
+    FAILED_TO_CONFIGURE,
     IS_BEING_CONFIGURED,
     IS_DOWNLOADING_MODELS,
-    IS_READY_FOR_NUTRITION,
     IS_READY_FOR_DETECTION
 }
 ```

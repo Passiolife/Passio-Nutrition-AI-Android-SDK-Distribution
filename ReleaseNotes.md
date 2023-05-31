@@ -2,6 +2,36 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V2.3.1
+
+* Added ```@CameraSelector.LensFacing cameraFacing: Int``` parameter to ```startCamera```. Gives the ability to choose which camera to open.
+* Added new class ```PassioCameraConfigurator``` and a new ```startCamera``` function that uses this as an input parameter. The PassioCameraConfigurator enables custom setup of the camera preview, image analysis, zoom levels and other. 
+
+```kotlin
+interface PassioCameraConfigurator {
+
+    @RotationValue
+    fun displayRotation(): Int = Surface.ROTATION_0
+
+    @LensFacing
+    fun cameraFacing(): Int
+
+    fun preview(): Preview
+
+    fun analyzer(): ImageAnalysis {
+        return ImageAnalysis.Builder().apply {
+            setTargetAspectRatio(AspectRatio.RATIO_16_9)
+        }.build()
+    }
+
+    fun setZoomRatio(minRatio: Float, maxRatio: Float): Float = 1f
+
+    fun tapToFocus(): Boolean = true
+}
+```
+* Added function ```stopCamera``` that will release all resources bound to the camera process, including the lifecycle owner and the preview view.
+
+
 ## V2.3.0
 
 * Removed the support for Kotlin version 1.4.21

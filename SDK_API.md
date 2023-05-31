@@ -178,6 +178,7 @@ private const val MINIMUM_CONFIDENCE_TF_OD_API = 0.33f
  * thread pool, but the resulting callback will always be
  * invoked on the main thread.
  */
+@Keep
 interface PassioSDK {
 
     /**
@@ -205,9 +206,10 @@ interface PassioSDK {
         MAX
     }
 
+    @Keep
     companion object {
-        const val BARCODE_PREFIX = "barcode"
-        const val PACKAGED_FOOD_PREFIX = "packaged"
+        val BARCODE_PREFIX = PassioIDEntityType.barcode.name
+        val PACKAGED_FOOD_PREFIX = PassioIDEntityType.packagedFoodCode.name
         const val BKG_PASSIO_ID = "BKG0001"
 
         private var internalInstance: PassioSDK? = null
@@ -301,8 +303,16 @@ interface PassioSDK {
     fun startCamera(
         passioCameraViewProvider: PassioCameraViewProvider,
         displayRotation: Int = 0,
+        @CameraSelector.LensFacing cameraFacing: Int = CameraSelector.LENS_FACING_BACK,
         tapToFocus: Boolean = false
     )
+
+    fun startCamera(
+        viewProvider: PassioCameraViewProvider,
+        configurator: PassioCameraConfigurator
+    )
+
+    fun stopCamera()
 
     /**
      * Turns the device's flashlight on or off.
@@ -453,15 +463,6 @@ interface PassioSDK {
         onAttributesFetched: (passioIDAttributes: PassioIDAttributes?) -> Unit
     )
 
-    /**
-     * For a given [PackagedFoodCode] creates a networking call to Passio's
-     * backend that tries to fetch the corresponding [PassioIDAttributes].
-     *
-     * @param packagedFoodCode the barcode string of the packaged food.
-     * @param onAttributesFetched callback function that will return the
-     *                            PassioIDAttributes if that packaged food
-     *                            is enlisted on Passio's backend.
-     */
     fun fetchPassioIDAttributesForPackagedFood(
         packagedFoodCode: PackagedFoodCode,
         onAttributesFetched: (passioIDAttributes: PassioIDAttributes?) -> Unit
