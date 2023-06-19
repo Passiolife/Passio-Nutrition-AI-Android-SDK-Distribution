@@ -2,6 +2,10 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V2.3.3
+
+* Added support for YOLO object detection model
+
 ## V2.3.1
 
 * Added ```@CameraSelector.LensFacing cameraFacing: Int``` parameter to ```startCamera```. Gives the ability to choose which camera to open.
@@ -30,6 +34,7 @@ interface PassioCameraConfigurator {
 }
 ```
 * Added function ```stopCamera``` that will release all resources bound to the camera process, including the lifecycle owner and the preview view.
+* Added ```useFrontCamera``` flag to the constructor of the ```PassioCameraFragment```.
 
 
 ## V2.3.0
