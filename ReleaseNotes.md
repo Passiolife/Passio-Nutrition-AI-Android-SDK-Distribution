@@ -2,6 +2,38 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V2.3.8
+
+### Deprecated APIs
+
+* ```lookupIconFor``` has been deprecated. Use ```lookupIconsFor``` instead.
+
+### Refactored APIs
+
+* Total amounts of nutrients in ```PassioFoodItemData``` are now *nullable*.
+* Camera and camera autofocus features in the manifest are now marked as not required.
+
+### Added APIs
+
+* As a replacement for the deprecated ```lookupIconFor```, ```lookupIconsFor``` now returns two values: The default icon shipped with the SDK and the cached icon, if one is present.
+```
+fun lookupIconsFor(
+    context: Context,
+    passioID: PassioID,
+    iconSize: IconSize = IconSize.PX90,
+    type: PassioIDEntityType = PassioIDEntityType.item,
+): Pair<Drawable, Drawable?>
+```
+* Get the URL to fetch the icon for a food item with
+```
+fun iconURLFor(context: Context, passioID: PassioID, size: IconSize = IconSize.PX90): String
+```
+
+* Fetch the tags of a food item
+```
+fun fetchTagsFor(passioID: PassioID, onTagsFetched: (tags: List<String>?) -> Unit)
+```
+
 ## V2.3.3
 
 * Added support for YOLO object detection model
