@@ -2,6 +2,12 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V2.3.11
+
+* Fix ```PassioFoodItemData``` caching error.
+* Added support for sugars, sugar alcohol, trans fat, saturated fat and cholesterol in the Nutrition Facts label reader.
+* The Nutrition Facts label reader now supports *French*.
+
 ## V2.3.8
 
 ### Deprecated APIs
