@@ -2,6 +2,29 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V2.3.13
+
+* Add support for German language pack
+
+### Added APIs
+
+* New flag in the ```PassioConfiguration``` object called ```enableLanguagePack```. If set to true, after SDK initializtion, if the phone locale is set to German will apply the German language pack. English is default.
+
+* Added new API to set the language of the food items from the nutritional database. If set to AUTO, the phone locale is chosen.
+```
+fun setSDKLanguage(
+    context: Context,
+    language: SDKLanguage,
+    result: (languageSet: SDKLanguage?) -> Unit
+)
+
+enum class SDKLanguage(val code: String) {
+    AUTO("auto"),
+    EN("en"),
+    DE("de"),
+}
+```
+
 ## V2.3.11
 
 * Fix ```PassioFoodItemData``` caching error.
