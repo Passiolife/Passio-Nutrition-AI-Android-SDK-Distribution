@@ -2,6 +2,27 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V2.3.15
+
+### Deprecated APIs
+
+* Removed support for language packs, they will be available in version 3.0.0. Removed ```enableLanguagePack``` from the ```PassioConfiguration``` object, and the ```setSDKLanguage```.
+
+### Added APIs 
+
+* Fetch a map of nutrients for a 100 grams of a specific food item
+
+```
+fun fetchNutrientsFor(passioID: PassioID, onResult: (nutrients: List<PassioNutrient>?) -> Unit)
+
+data class PassioNutrient(
+    val name: String,
+    val amount: Double,
+    val unit: String,
+    val inflammatoryEffectScore: Double,
+)
+```
+
 ## V2.3.13
 
 * Add support for German language pack
