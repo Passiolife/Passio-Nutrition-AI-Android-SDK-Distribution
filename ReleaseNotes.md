@@ -2,6 +2,42 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V3.0.0-alpha
+
+Version 3 of the Passio SDK introduces major changes to the nutritional data class and the search functionality. The SDK no longer supports offline work, there is no more local database.
+
+## Deprecated APIs
+
+* ```lookupNameFor```, ```lookupPassioAttributesFor```, ```lookupPassioAttributesForName``` and ```lookupAllDescendantsFor``` have been removed since these function were querying the local database
+
+* *PassioIDAttributes*, *PassioFoodItemData* and *PassioFoodRecipe* have been removed. The new data model that will handle nutritional data is called *PassioFoodItem*
+
+## Refactored APIs 
+
+* ```searchForFood``` now returns *PassioSearchResult* and a list of search options. The PassioSearchResult represent a specific food item associated with the search term, while search options provide a list of possible suggested search terms connected to the input term.
+
+* ```lookupIconFor``` has been deprecated, the correct function to use is ```lookupIconsFor```
+
+* ```fetchPassioIDAttributesForBarcode``` and ```fetchPassioIDAttributesForPackagedFood``` have been replaced with ```fetchFoodItemForProductCode``` than now returns a *PassioFoodItem* result
+
+* ```DetectedCandidate``` now has an attribute called _foodName_
+
+* ```FoodRecognitionListener``` method ```onRecognitionResults``` can now return nullable FoodCandidates
+
+* ```fetchNutrientsFor``` has been renamed to ```fetchInflammatoryEffectData```, and *PassioNutrient* has been renamed to *InflammatoryEffectData*
+
+
+## Added APIs
+
+* ```fetchSearchResult``` returns a *PassioFoodItem* object for a given _PassioSearchResult_
+
+* ```fetchFoodItemForPassioID``` returns a *PassioFoodItem* object for a given passioID corresponding to a result from the visual detection
+
+* Added class *PassioSearchResult* that represents a result from the *searchForFood* function
+
+* Added class *PassioFoodItem* that represent a food item from the Passio Nutritional database. It has a list of *PassioIngredient*s, with their respective *PassioFoodAmount*s and *PassioNutrient*s
+
+
 ## V2.3.15
 
 ### Deprecated APIs

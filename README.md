@@ -1,6 +1,6 @@
 # Passio SDK
 
-[![release](https://img.shields.io/badge/release-v2.3.15-brightgreen)](https://github.com/Passiolife/Passio-Nutrition-AI-Android-SDK-Distribution/releases/tag/v2.3.15)    [![release](https://img.shields.io/badge/platform-Android-lightgray)]() [![release](https://img.shields.io/badge/minimum--suported--version-26-lightgray)](https://developer.android.com/about/versions/oreo)  [![release](https://img.shields.io/badge/Kotlin-v1.6.10-informational)](https://github.com/JetBrains/kotlin/releases/tag/v1.6.10) [![release](https://img.shields.io/badge/codelab-Get_started-important)](https://musing-gates-4e7160.netlify.app/#0)
+[![release](https://img.shields.io/badge/release-v3.0.0-brightgreen)](https://github.com/Passiolife/Passio-Nutrition-AI-Android-SDK-Distribution/releases/tag/v3.0.0)    [![release](https://img.shields.io/badge/platform-Android-lightgray)]() [![release](https://img.shields.io/badge/minimum--suported--version-26-lightgray)](https://developer.android.com/about/versions/oreo)  [![release](https://img.shields.io/badge/Kotlin-v1.6.10-informational)](https://github.com/JetBrains/kotlin/releases/tag/v1.6.10) [![release](https://img.shields.io/badge/codelab-Get_started-important)](https://musing-gates-4e7160.netlify.app/#0)
 
 ## Overview:
 
@@ -96,8 +96,8 @@ dependencies {
     implementation 'androidx.camera:camera-extensions:1.3.0-alpha02'
 
     // Barcode and OCR
-    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.2'
-    implementation 'com.google.android.gms:play-services-mlkit-barcode-scanning:18.1.0'
+    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:19.0.0'
+    implementation 'com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0'
     ...
 }
 ```
@@ -206,7 +206,7 @@ To start the Food Recognition process a `FoodRecognitionListener` also has to be
 
 ```kotlin
 private val foodListener = object : FoodRecognitionListener {
-    override fun onRecognitionResults(candidates: FoodCandidates, image: Bitmap?, nutritionFacts: PassioNutritionFacts?) {
+    override fun onRecognitionResults(candidates: FoodCandidates?, image: Bitmap?, nutritionFacts: PassioNutritionFacts?) {
         val visualCandidates = candidates.detectedCandidates!!
         val barcodeCandidates = candidates.barcodeCandidates!!
         if (visualCandidates.isEmpty() && barcodeCandidates.isEmpty()) {
