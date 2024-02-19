@@ -240,6 +240,64 @@ override fun onStop() {
 }
 ```
 
+### 5. Fetch nutritional data
+
+Depending on the type of recognized candidate, nutritional data is fetched using these two methods:
+* For visual candidates: ```fetchFoodItemForPassioID```
+* For barcode and packaged food: ```fetchFoodItemForProductCode```
+
+Both of these functions have a callback that returns the nutritional data as ```PassioFoodItem``` object, null if no data is found or the network is unavailable.
+
+### 6. Search
+
+The SDK's search functionality returns a list of search results and a list of search options of a given search term. 
+
+```kotlin
+fun searchForFood(
+    term: String,
+    callback: (result: List<PassioSearchResult>, searchOptions: List<String>) -> Unit
+)
+```
+
+* PassioSearchResult holds information such as foodName, brandName, iconID and nutritionPreview
+* The search options provide a list of alternate search terms related to the given term. For example if the search term is "apple", a list of searchOptions would include items such as "red apple", "green apple", "apple juice"...
+
+The function ```fetchSearchResult``` is used to retrieve nutritional data for a given PassioSearchResult. Same as in the camera recognition results, the return object is ```PassioFoodItem```.
+
+### 8. PassioFoodItem
+
+This is top level object that holds all of the nutritional information such as nutrient data, serving sizes, data origins and more.
+
+```kotlin
+data class PassioFoodItem(
+    val id: String,
+    val name: String,
+    val details: String,
+    val iconId: String,
+    val amount: PassioFoodAmount,
+    val ingredients: List<PassioIngredient>,
+)
+```
+* Details contain information such as food brand or food category for general food items
+* PassioFoodAmount can be used to get a list of associated serving units and predefined serving sizes. It's also used to control the currently selected quantity and unit
+* The nutritional data will be stored in the PassioIngredient object. 
+
+```kotlin
+data class PassioIngredient(
+    val id: String,
+    val name: String,
+    val iconId: String,
+    val amount: PassioFoodAmount,
+    val referenceNutrients: PassioNutrients,
+    val metadata: PassioFoodMetadata,
+)
+```
+* Each ingredient has it's own nutritional data and serving size. 
+* Nutrients like calories, carbs, protein and other can be found in the PassioNutrients object, but there are three helper functions to easily fetch the nutrients for the appropriate use case
+* ```fun nutrients(weight: UnitMass): PassioNutrients``` will return nutrients for a given UnitMass
+* ```fun nutrientsSelectedSize(): PassioNutrients``` will return nutrients for the currently selected unit and quantity in the ```amount``` object
+* ```fun nutrientsReference(): PassioNutrients``` will return nutrients for the reference weight of 100 grams
+
 ## Use the image below to test recognition
 ![passio_recognition_test](./readme_images/passio_recognition_test.jpeg)
 
@@ -248,4 +306,3 @@ override fun onStop() {
 * For a simple way to use the camera functionality of the SDK, extend the `PassioCameraFragment`. It contains the logic to ask for the camera permission, and if granted, start the camera preview. An example of the PassioCameraFragment can be seen in the `FoodRecognizerFragment` of the PassioSDKDemo project.
 
 <sup>Copyright 2023 Passio Inc</sup>
-
