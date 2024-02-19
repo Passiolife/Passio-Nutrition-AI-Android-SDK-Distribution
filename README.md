@@ -264,7 +264,7 @@ fun searchForFood(
 
 The function ```fetchSearchResult``` is used to retrieve nutritional data for a given PassioSearchResult. Same as in the camera recognition results, the return object is ```PassioFoodItem```.
 
-### 8. PassioFoodItem
+### 7. PassioFoodItem
 
 This is top level object that holds all of the nutritional information such as nutrient data, serving sizes, data origins and more.
 
