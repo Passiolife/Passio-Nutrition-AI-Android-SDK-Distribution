@@ -2,6 +2,29 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V3.0.1
+
+## Added APIs
+
+* Reintroduced support for alternatives to visual results. Every detected candidate will have a list of ```alternatives: List<DetectedCandidate>```. These alternatives represent contextually simillar foods. Example: If the DetectadeCandidate would be "milk", than the list of alternatives would include items like "soy milk", "almond milk", etc. 
+
+* Also, the interface ```FoodRecognitionListener``` might return multiple detected candidates, ordered by confidence. These multiple candidates represent the top result that our recognition system is predicting, but also other results that are visually simillar to the top result. Example: If the first result in the list of ```detectedCandidates``` is "coffee", there might be more results in the list that are visually simillar to coffee like "coke", "black tea", "chocolate milk", etc.
+
+* Added *PassioSearchNutritionPreview* to the PassioSearchResult, for the ability to show the default serving sizes in the search functionality. 
+
+```
+data class PassioSearchNutritionPreview(
+    val calories: Int,
+    val servingUnit: String,
+    val servingQuantity: Double,
+    val servingWeight: String
+)
+```
+
+## Refactored APIs
+
+* Changed PassioFoodItem *shortName* and *verboseName* to ```name``` and ```details```. Details represent either the food item where the nutritional data comes from or the brand of the food product.
+
 ## V3.0.0-alpha
 
 Version 3 of the Passio SDK introduces major changes to the nutritional data class and the search functionality. The SDK no longer supports offline work, there is no more local database.
