@@ -9,7 +9,7 @@ b) Also, the interface ```FoodRecognitionListener``` might return multiple detec
 * ```lookupIconFor``` has been deprecated, the correct function to use is ```lookupIconsFor```
 
 ## Search
-* ```searchForFood``` now returns *PassioSearchResult* and a list of search options. The PassioSearchResult represent a specific food item associated with the search term, while search options provide a list of possible suggested search terms connected to the input term.
+* ```searchForFood``` now returns list of *PassioSearchResult* and a list of search options. The PassioSearchResult represent a specific food item associated with the search term, while search options provide a list of possible suggested search terms connected to the input term.
 
 ```kotlin
 data class PassioSearchResult(
