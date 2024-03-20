@@ -2,7 +2,7 @@
 
 * ```lookupNameFor```, ```lookupPassioAttributesForName``` and ```lookupAllDescendantsFor``` have been removed since these function were querying the local database
 * ```lookupPassioAttributesFor``` has been replaced with ```fetchFoodItemForPassioID``` and now returns a *PassioFoodItem* result
-* ```fetchPassioIDAttributesForBarcode``` and ```fetchPassioIDAttributesForPackagedFood``` have been replaced with ```fetchFoodItemForProductCode``` than now returns a *PassioFoodItem* result
+* ```fetchPassioIDAttributesForBarcode``` and ```fetchPassioIDAttributesForPackagedFood``` have been replaced with ```fetchFoodItemForProductCode``` that now returns a *PassioFoodItem* result
 * Alternative results in the form of *parents*, *siblings* and *children* have been replaced with two types of alternatives:
 a) Every detected candidate will have a list of ```alternatives: List<DetectedCandidate>```. These alternatives represent contextually similar foods. Example: If the DetectadeCandidate would be "milk", than the list of alternatives would include items like "soy milk", "almond milk", etc. 
 b) Also, the interface ```FoodRecognitionListener``` might return multiple detected candidates, ordered by confidence. These multiple candidates represent the top result that our recognition system is predicting, but also other results that are visually similar to the top result. Example: If the first result in the list of ```detectedCandidates``` is "coffee", there might be more results in the list that are visually simillar to coffee like "coke", "black tea", "chocolate milk", etc.
