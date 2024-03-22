@@ -2,6 +2,35 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V3.0.2
+
+## Added APIs
+
+* Added API to fetch suggestion for a certain meal time. To fetch a the full nutritional data for a suggestion item use ```fetchFoodItemForSuggestion```.
+
+```
+fun fetchSuggestions(
+    mealTime: MealTime,
+    callback: (results: List<PassioSearchResult>) -> Unit
+)
+
+enum class MealTime(val mealName: String) {
+    BREAKFAST("breakfast"),
+    LUNCH("lunch"),
+    DINNER("dinner"),
+    SNACK("snack")
+}
+
+fun fetchFoodItemForSuggestion(
+    suggestion: PassioSearchResult,
+    callback: (foodItem: PassioFoodItem?) -> Unit
+)
+```
+
+## Refactored APIs
+
+Renamed ```fetchSearchResult``` to ```fetchFoodItemForSearchResult```.
+
 ## V3.0.1
 
 ## Added APIs
