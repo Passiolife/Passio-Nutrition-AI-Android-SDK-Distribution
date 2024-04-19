@@ -2,6 +2,34 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V3.0.3
+
+* Added APIs
+
+* Added two APIs to fetch a list of meal plans and fetch a meal plan for a certain day.
+
+```kotlin
+fun fetchMealPlans(callback: (result: List<PassioMealPlan>) -> Unit)
+
+fun fetchMealPlanForDay(
+    mealPlanLabel: String,
+    day: Int,
+    callback: (result: List<PassioMealPlanItem>) -> Unit
+)
+```
+
+* Added values for carbs protein and fat in the ```PassioSearchNutritionPreview``` data class.
+
+* MealTime was renamed to ```PassioMealTime```.
+
+* Refactored APIs
+
+* PassioSearchResult was renamed to ```PassioFoodDataInfo```, fetchFoodItemForSearchResult was renamed to ```fetchFoodItemForDataInfo```.
+
+* fetchFoodItemForSuggestion was removed. Instead ```fetchFoodItemForDataInfo``` is used.
+
+* 
+
 ## V3.0.2
 
 ## Added APIs

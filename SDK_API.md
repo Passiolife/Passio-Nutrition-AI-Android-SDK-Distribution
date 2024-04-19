@@ -1,14 +1,8 @@
 # Passio SDK API
 
-## Version 2.2.11
+## Version 3.0.2
 
 ```kotlin
-
-
-/**
- * The identifier of a food item located in the nutritional
- * database.
- */
 typealias PassioID = String
 
 /**
@@ -51,6 +45,8 @@ open class DetectedCandidate(
      * The id used to query the nutritional database.
      */
     val passioID: PassioID,
+
+    val foodName: String,
     /**
      * Percentage of the neural network confidence level. Ranges from 0f - 1f or 0% to 100%.
      */
@@ -64,7 +60,9 @@ open class DetectedCandidate(
     /**
      * Represents a part of the original image that the classification process has been ran on.
      */
-    val croppedImage: Bitmap?
+    val croppedImage: Bitmap?,
+
+    val alternatives: List<DetectedCandidate>
 )
 
 /**
@@ -126,7 +124,7 @@ interface FoodRecognitionListener {
      * @param nutritionFacts recognized nutrition facts for the camera frame.
      */
     fun onRecognitionResults(
-        candidates: FoodCandidates,
+        candidates: FoodCandidates?,
         image: Bitmap?,
         nutritionFacts: PassioNutritionFacts?
     )
@@ -165,8 +163,46 @@ interface PassioStatusListener {
     fun onDownloadError(message: String)
 }
 
+data class InflammatoryEffectData(
+    val nutrient: String,
+    val amount: Double,
+    val unit: String,
+    val inflammatoryEffectScore: Double,
+)
 
-private const val MINIMUM_CONFIDENCE_TF_OD_API = 0.33f
+data class PassioFoodDataInfo(
+    val foodName: String,
+    val brandName: String,
+    val iconID: PassioID,
+    val score: Double,
+    val scoredName: String,
+
+    val labelId: String,
+    val type: String,
+    val resultId: String,
+    val useShortName: Boolean,
+
+    val nutritionPreview: PassioSearchNutritionPreview
+)
+
+data class PassioSearchNutritionPreview(
+    val calories: Int,
+    val carbs: Double,
+    val protein: Double,
+    val fat: Double,
+    val servingUnit: String,
+    val servingQuantity: Double,
+    val servingWeight: String
+)
+
+enum class PassioMealTime(val mealName: String) {
+    BREAKFAST("breakfast"),
+    LUNCH("lunch"),
+    DINNER("dinner"),
+    SNACK("snack")
+}
+
+private const val MINIMUM_CONFIDENCE_TF_OD_API = 0.3f
 
 /**
  * Main access point of the SDK. Defines all of the SDK's
@@ -208,8 +244,6 @@ interface PassioSDK {
 
     @Keep
     companion object {
-        val BARCODE_PREFIX = PassioIDEntityType.barcode.name
-        val PACKAGED_FOOD_PREFIX = PassioIDEntityType.packagedFoodCode.name
         const val BKG_PASSIO_ID = "BKG0001"
 
         private var internalInstance: PassioSDK? = null
@@ -231,6 +265,8 @@ interface PassioSDK {
          * to the user. The default value is 0.5.
          */
         fun minimumConfidence() = MINIMUM_CONFIDENCE_TF_OD_API
+
+        fun getVersion() = PassioSDKImpl.SDK_VERSION
     }
 
     /**
@@ -378,12 +414,23 @@ interface PassioSDK {
         onDetectionCompleted: (candidates: FoodCandidates?) -> Unit
     ): Boolean
 
-    fun lookupIconFor(
+//    /**
+//     * @deprecated use [lookupIconsFor] instead.
+//     */
+//    @Deprecated("Use lookupIconsFor instead")
+//    fun lookupIconFor(
+//        context: Context,
+//        passioID: PassioID,
+//        iconSize: IconSize = IconSize.PX90,
+//        type: PassioIDEntityType = PassioIDEntityType.item,
+//    ): Pair<Drawable, Boolean>
+
+    fun lookupIconsFor(
         context: Context,
         passioID: PassioID,
         iconSize: IconSize = IconSize.PX90,
         type: PassioIDEntityType = PassioIDEntityType.item,
-    ): Pair<Drawable, Boolean>
+    ): Pair<Drawable, Drawable?>
 
     /**
      * For a given [PassioID] returns the corresponding image from the SDK's asset folder.
@@ -397,75 +444,6 @@ interface PassioSDK {
         passioID: PassioID,
         iconSize: IconSize = IconSize.PX90,
         callback: (drawable: Drawable?) -> Unit
-    )
-
-    /**
-     * For a given [PassioID] returns the name of corresponding food item.
-     *
-     * @param passioID the ID of the food item
-     * @return name of the food item if there is a an object in the nutritional database with the
-     *         provided passioID, null otherwise.
-     */
-    fun lookupNameFor(passioID: PassioID): String?
-
-    /**
-     * For a given [PassioID] returns the [PassioIDAttributes] of that food item.
-     *
-     * @param passioID the ID of the food item
-     * @return attributes object that represents all of the nutritional data the SDK has on a food
-     *         item corresponding to the passioID, null otherwise.
-     */
-    fun lookupPassioAttributesFor(passioID: PassioID): PassioIDAttributes?
-
-    /**
-     * For a given food item [name] returns the [PassioIDAttributes]
-     * of that food item.
-     *
-     * @param name of the food item
-     * @return attributes object that represents all of the nutritional data the SDK
-     *         item corresponding to the food item name, null otherwise.
-     */
-    fun lookupPassioAttributesForName(name: String): PassioIDAttributes?
-
-    /**
-     * For a given [passioID] returns a list that contains the subtree of the food hierarchy that
-     * has the food item with the given [passioID] as a root.
-     *
-     * @param passioID the ID of the food item
-     * @return list that represents the subtree of the given [passioID], null otherwise.
-     */
-    fun lookupAllDescendantsFor(passioID: PassioID): List<PassioID>?
-
-    /**
-     * Search functions that uses the given [byText] to cross reference
-     * the names of the food items in the nutritional database.
-     *
-     * @param byText the string used to query the database
-     * @return list of all of the [PassioID]s with the corresponding
-     *         names of the food items.
-     */
-    fun searchForFood(
-        byText: String,
-        callback: (result: List<Pair<PassioID, String>>) -> Unit
-    )
-
-    /**
-     * For a given [Barcode] creates a networking call to Passio's
-     * backend that tries to fetch the corresponding [PassioIDAttributes].
-     *
-     * @param barcode the barcode string of the packaged food.
-     * @param onAttributesFetched callback function that will return the
-     *                            PassioIDAttributes if that packaged food
-     *                            is enlisted on Passio's backend.
-     */
-    fun fetchPassioIDAttributesForBarcode(
-        barcode: Barcode,
-        onAttributesFetched: (passioIDAttributes: PassioIDAttributes?) -> Unit
-    )
-
-    fun fetchPassioIDAttributesForPackagedFood(
-        packagedFoodCode: PackagedFoodCode,
-        onAttributesFetched: (passioIDAttributes: PassioIDAttributes?) -> Unit
     )
 
     /**
@@ -493,6 +471,48 @@ interface PassioSDK {
         displayAngle: Int = 0,
         barcode: Boolean = false
     ): RectF
+
+    fun iconURLFor(passioID: PassioID, size: IconSize = IconSize.PX90): String
+
+    fun fetchTagsFor(passioID: PassioID, onTagsFetched: (tags: List<String>?) -> Unit)
+
+    fun fetchInflammatoryEffectData(
+        passioID: PassioID,
+        onResult: (data: List<InflammatoryEffectData>?) -> Unit
+    )
+
+    fun searchForFood(
+        term: String,
+        callback: (result: List<PassioFoodDataInfo>, searchOptions: List<String>) -> Unit
+    )
+
+    fun fetchFoodItemForDataInfo(
+        searchResult: PassioFoodDataInfo,
+        callback: (foodItem: PassioFoodItem?) -> Unit
+    )
+
+    fun fetchFoodItemForProductCode(
+        productCode: String,
+        onResult: (foodItem: PassioFoodItem?) -> Unit
+    )
+
+    fun fetchFoodItemForPassioID(
+        passioID: PassioID,
+        onResult: (foodItem: PassioFoodItem?) -> Unit
+    )
+
+    fun fetchSuggestions(
+        mealTime: PassioMealTime,
+        callback: (results: List<PassioFoodDataInfo>) -> Unit
+    )
+
+    fun fetchMealPlans(callback: (result: List<PassioMealPlan>) -> Unit)
+
+    fun fetchMealPlanForDay(
+        mealPlanLabel: String,
+        day: Int,
+        callback: (result: List<PassioMealPlanItem>) -> Unit
+    )
 }
 ```
 
