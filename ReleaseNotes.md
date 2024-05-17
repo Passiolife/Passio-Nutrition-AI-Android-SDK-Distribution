@@ -2,6 +2,72 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V3.1.0
+
+### Introducing the Nutrition AI Advisor!
+
+* To access the API od the Advisor use ```NutritionAdvisor.instance```
+
+```kotlin
+fun configure(
+    appContext: Context,
+    licenseKey: String,
+    callback: (result: PassioResult<Any>) -> Unit
+)
+
+fun initConversation(callback: (result: PassioResult<Any>) -> Unit)
+
+fun sendMessage(
+    message: String,
+    callback: (response: PassioResult<PassioAdvisorResponse>) -> Unit
+)
+
+fun sendImage(
+    bitmap: Bitmap,
+    callback: (response: PassioResult<PassioAdvisorResponse>) -> Unit
+)
+
+fun fetchIngredients(
+    response: PassioAdvisorResponse,
+    callback: (response: PassioResult<PassioAdvisorResponse>) -> Unit
+)
+```
+
+### Refactored APIs
+
+* Nutrition facts scanning has been separated out in different recognition flow. The ```FoodDetectionConfiguration``` object no longer has the *detectNutritionFacts* parameter.
+* The scanning now is controled by these new functions
+
+```kotlin
+fun startNutritionFactsDetection(listener: NutritionFactsRecognitionListener)
+
+fun stopNutritionFactsDetection()
+
+interface NutritionFactsRecognitionListener {
+    fun onRecognitionResult(nutritionFacts: PassioNutritionFacts?, text: String)
+}
+```
+
+### Added APIs
+
+* Added speech recognition API that retrieves a list of recognized foods from the input text query.
+
+```kotlin
+fun recognizeSpeechRemote(text: String, callback: (result: List<PassioSpeechRecognitionModel>) -> Unit)
+```
+
+* Added LLM image detection, that works remotely through Passio's backend.
+
+```kotlin
+fun recognizeImageRemote(bitmap: Bitmap, callback: (result: List<PassioAdvisorFoodInfo>) -> Unit)
+```
+
+* Added a function to retrieve a PassioFoodItem for a *v2 PassioID*
+
+```kotlin
+fun fetchFoodItemLegacy(passioID: PassioID, callback: (foodItem: PassioFoodItem?) -> Unit)
+```
+
 ## V3.0.3
 
 * Added APIs
@@ -27,8 +93,6 @@ fun fetchMealPlanForDay(
 * PassioSearchResult was renamed to ```PassioFoodDataInfo```, fetchFoodItemForSearchResult was renamed to ```fetchFoodItemForDataInfo```.
 
 * fetchFoodItemForSuggestion was removed. Instead ```fetchFoodItemForDataInfo``` is used.
-
-* 
 
 ## V3.0.2
 

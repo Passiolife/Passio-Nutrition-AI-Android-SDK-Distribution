@@ -1,6 +1,6 @@
 # Passio SDK
 
-[![release](https://img.shields.io/badge/release-v3.0.3-brightgreen)](https://github.com/Passiolife/Passio-Nutrition-AI-Android-SDK-Distribution/releases/tag/v3.0.3)    [![release](https://img.shields.io/badge/platform-Android-lightgray)]() [![release](https://img.shields.io/badge/minimum--suported--version-26-lightgray)](https://developer.android.com/about/versions/oreo)  [![release](https://img.shields.io/badge/Kotlin-v1.6.10-informational)](https://github.com/JetBrains/kotlin/releases/tag/v1.6.10) [![release](https://img.shields.io/badge/codelab-Get_started-important)](https://musing-gates-4e7160.netlify.app/#0)
+[![release](https://img.shields.io/badge/release-v3.1.0-brightgreen)](https://github.com/Passiolife/Passio-Nutrition-AI-Android-SDK-Distribution/releases/tag/v3.1.0)    [![release](https://img.shields.io/badge/platform-Android-lightgray)]() [![release](https://img.shields.io/badge/minimum--suported--version-26-lightgray)](https://developer.android.com/about/versions/oreo)  [![release](https://img.shields.io/badge/Kotlin-v1.6.10-informational)](https://github.com/JetBrains/kotlin/releases/tag/v1.6.10) [![release](https://img.shields.io/badge/codelab-Get_started-important)](https://musing-gates-4e7160.netlify.app/#0)
 
 ## Overview:
 
@@ -305,4 +305,55 @@ data class PassioIngredient(
 
 * For a simple way to use the camera functionality of the SDK, extend the `PassioCameraFragment`. It contains the logic to ask for the camera permission, and if granted, start the camera preview. An example of the PassioCameraFragment can be seen in the `FoodRecognizerFragment` of the PassioSDKDemo project.
 
-<sup>Copyright 2023 Passio Inc</sup>
+### 7. Nutrition AI Advisor
+
+## Configure the Nutrition Advisor and start a conversation
+
+#### Note: Make sure you don't utilize the PassioNutritionAISDK Key. Instead, enter the key you obtained from Passio for NutritionAdvisor.
+
+- Configure the Nutrition Advisor using the license key.
+```kotlin
+NutritionAdvisor.instance.configure(
+    applicationContext,
+    "your key here"
+) { result ->
+    when (result) {
+        is PassioResult.Success -> /* continue with init conversation */
+        is PassioResult.Error -> /* handle configuration error */
+    }
+}
+```
+
+- Start a new conversation by calling ```initConversation```.
+```kotlin
+NutritionAdvisor.instance.initConversation { result ->
+    when (result) {
+        is PassioResult.Success -> /* the advisor can start acceping messages */
+        is PassioResult.Error -> /* handle conversation init error */
+    }
+}
+```
+
+### Send messages to chat with the advisor or images for recognition
+
+1. Send a text message to the advisor
+```kotlin
+NutritionAdvisor.instance.sendMessage("Hi! I would like a recipe for a healthy burger!") { result ->
+    when (result) {
+        is PassioResult.Success -> /* parse the response from the result.value */
+        is PassioResult.Error -> /* handle message error */
+    }
+}
+```
+2. Use this method to send image to Nutrition Advisor
+```kotlin
+val bitmap = loadBitmap()
+NutritionAdvisor.instance.sendImage(bitmap) { result ->
+    when (result) {
+        is PassioResult.Success -> /* the food items are found in result.value.extractedIngredients */
+        is PassioResult.Error -> /* handle message error */
+    }
+}
+```
+
+<sup>Copyright 2024 Passio Inc</sup>

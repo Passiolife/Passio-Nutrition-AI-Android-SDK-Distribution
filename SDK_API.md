@@ -414,17 +414,6 @@ interface PassioSDK {
         onDetectionCompleted: (candidates: FoodCandidates?) -> Unit
     ): Boolean
 
-//    /**
-//     * @deprecated use [lookupIconsFor] instead.
-//     */
-//    @Deprecated("Use lookupIconsFor instead")
-//    fun lookupIconFor(
-//        context: Context,
-//        passioID: PassioID,
-//        iconSize: IconSize = IconSize.PX90,
-//        type: PassioIDEntityType = PassioIDEntityType.item,
-//    ): Pair<Drawable, Boolean>
-
     fun lookupIconsFor(
         context: Context,
         passioID: PassioID,
@@ -512,6 +501,63 @@ interface PassioSDK {
         mealPlanLabel: String,
         day: Int,
         callback: (result: List<PassioMealPlanItem>) -> Unit
+    )
+
+    fun recognizeSpeechRemote(text: String, callback: (result: List<PassioSpeechRecognitionModel>) -> Unit)
+
+    fun recognizeImageRemote(bitmap: Bitmap, callback: (result: List<PassioAdvisorFoodInfo>) -> Unit)
+
+    fun fetchFoodItemForRefCode(refCode: String, callback: (foodItem: PassioFoodItem?) -> Unit)
+
+    fun startNutritionFactsDetection(listener: NutritionFactsRecognitionListener)
+
+    fun stopNutritionFactsDetection()
+
+    fun fetchFoodItemLegacy(passioID: PassioID, callback: (foodItem: PassioFoodItem?) -> Unit)
+}
+
+@Keep
+interface NutritionAdvisor {
+
+    @Keep
+    companion object {
+
+        private var internalInstance: NutritionAdvisor? = null
+
+        /**
+         * Use this singleton to access the Passio SDK.
+         */
+        @JvmStatic
+        val instance: NutritionAdvisor
+            get() {
+                if (internalInstance == null) {
+                    internalInstance = AdvisorService()
+                }
+                return internalInstance!!
+            }
+    }
+
+    fun configure(
+        appContext: Context,
+        licenseKey: String,
+        callback: (result: PassioResult<Any>) -> Unit
+    )
+
+    fun initConversation(callback: (result: PassioResult<Any>) -> Unit)
+
+    fun sendMessage(
+        message: String,
+        callback: (response: PassioResult<PassioAdvisorResponse>) -> Unit
+    )
+
+    fun sendImage(
+        bitmap: Bitmap,
+        callback: (response: PassioResult<PassioAdvisorResponse>) -> Unit
+    )
+
+    fun fetchIngredients(
+        response: PassioAdvisorResponse,
+        callback: (response: PassioResult<PassioAdvisorResponse>) -> Unit
     )
 }
 ```
