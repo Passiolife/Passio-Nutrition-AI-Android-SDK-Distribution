@@ -202,6 +202,12 @@ enum class PassioMealTime(val mealName: String) {
     SNACK("snack")
 }
 
+enum class PassioImageResolution {
+    RES_512,
+    RES_1080,
+    FULL
+}
+
 private const val MINIMUM_CONFIDENCE_TF_OD_API = 0.3f
 
 /**
@@ -505,15 +511,47 @@ interface PassioSDK {
 
     fun recognizeSpeechRemote(text: String, callback: (result: List<PassioSpeechRecognitionModel>) -> Unit)
 
-    fun recognizeImageRemote(bitmap: Bitmap, callback: (result: List<PassioAdvisorFoodInfo>) -> Unit)
+    fun recognizeImageRemote(
+        bitmap: Bitmap,
+        resolution: PassioImageResolution = PassioImageResolution.RES_512,
+        message: String? = null,
+        callback: (result: List<PassioAdvisorFoodInfo>) -> Unit
+    )
 
-    fun fetchFoodItemForRefCode(refCode: String, callback: (foodItem: PassioFoodItem?) -> Unit)
+    fun fetchFoodItemForRefCode(
+        refCode: String,
+        callback: (foodItem: PassioFoodItem?) -> Unit
+    )
 
     fun startNutritionFactsDetection(listener: NutritionFactsRecognitionListener)
 
     fun stopNutritionFactsDetection()
 
-    fun fetchFoodItemLegacy(passioID: PassioID, callback: (foodItem: PassioFoodItem?) -> Unit)
+    fun fetchFoodItemLegacy(
+        passioID: PassioID,
+        callback: (foodItem: PassioFoodItem?) -> Unit
+    )
+
+    fun recognizePackagedProductRemote(
+        bitmap: Bitmap,
+        resolution: PassioImageResolution = PassioImageResolution.RES_512,
+        callback: (foodItem: PassioFoodItem?) -> Unit
+    )
+
+    fun fetchHiddenIngredients(
+        foodName: String,
+        callback: (response: PassioResult<List<PassioAdvisorFoodInfo>>) -> Unit
+    )
+
+    fun fetchVisualAlternatives(
+        foodName: String,
+        callback: (response: PassioResult<List<PassioAdvisorFoodInfo>>) -> Unit
+    )
+
+    fun fetchPossibleIngredients(
+        foodName: String,
+        callback: (response: PassioResult<List<PassioAdvisorFoodInfo>>) -> Unit
+    )
 }
 
 @Keep

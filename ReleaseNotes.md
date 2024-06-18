@@ -2,6 +2,27 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V3.1.1
+
+### Added APIs
+
+* Added ```resolution: PassioImageResolution``` as a parameter of the ```recognizeImageRemote``` function. This enables the caller to set the target resolution of the image uploaded to the server. Smaller resolutions will result in faster response times, while higher resolutions should provide more accurate results.
+
+```kotlin
+enum class PassioImageResolution {
+    RES_512,
+    RES_1080,
+    FULL
+}
+```
+
+* Added a function ```fetchHiddenIngredients``` that returns possible hidden ingredients for a given food name.
+
+* Added a function ```fetchVisualAlternatives``` that returns possible visual alternatives for a given food name.
+
+* Added a function ```fetchPossibleIngredients``` that returns possible ingredients if a more complex food for a given food name.
+
+
 ## V3.1.0
 
 ### Introducing the Nutrition AI Advisor!
