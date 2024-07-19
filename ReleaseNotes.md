@@ -2,6 +2,17 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V3.1.4
+
+### Refactored APIs
+
+* The ```NutritionAdvisor``` no longer needs a separate key for configuration. The PassioSDK needs to be configured in order to call the NutritionAdvisor APIs. Also, any previous NutritionAdvisor keys won't work with this version, a new key needs to be obtained at https://www.passio.ai/
+
+* With the new key comes the new pricing model using tokens. Although all token usage can be seen in the portal, the SDK itself offers a listener to count the tokens being used by the SDK. 
+```kotlin
+fun setAccountListener(listener: PassioAccountListener?)
+```
+
 ## V3.1.1
 
 ### Added APIs
