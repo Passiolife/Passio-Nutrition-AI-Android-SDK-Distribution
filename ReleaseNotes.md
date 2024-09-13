@@ -2,6 +2,39 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V3.2.0
+
+### Added APIs
+
+* Added function ```recognizeNutritionFactsRemote``` that can parse the nutrition facts table from an image and return a PassioFoodItem with the scanned nutrients
+* Added support for localized content. Using ```fun updateLanguage(languageCode: String): Boolean``` with a two digit ISO 639-1 language code will transform the food names and serving sizes in the SDK responses. 
+* Added ```remoteOnly``` flag to the ```PassioConfiguration``` class. With this flag enabled, the SDK won't download the files needed for local recognition. In this case only remote recognition is possible.
+
+### Refactored APIs
+
+* ```recognizeImageRemote``` can now scan barcodes and nutrition facts. The PassioAdvisorFoodInfo class has been augmented to handle these responses
+
+```
+data class PassioAdvisorFoodInfo(
+    val recognisedName: String,
+    val portionSize: String,
+    val weightGrams: Double,
+    val foodDataInfo: PassioFoodDataInfo? = null,
+    val packagedFoodItem: PassioFoodItem? = null,
+    val resultType: PassioFoodResultType,
+)
+
+enum class PassioFoodResultType {
+    FOOD_ITEM,
+    BARCODE,
+    NUTRITION_FACTS
+}
+```
+
+* Property ```val tags: List<String>?``` was added to PassioFoodDataInfo.
+* Vitamin A RAE was added to the PassioNutrients class.
+
+
 ## V3.1.4
 
 ### Refactored APIs
