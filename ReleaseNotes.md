@@ -2,6 +2,37 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V3.2.1
+
+### Added APIs
+
+* Added function to report incorrect data on a packaged food using it's product or refCode
+```
+fun reportFoodItem(
+    refCode: String = "",
+    productCode: String = "",
+    notes: List<String>? = null,
+    callback: (result: PassioResult<Boolean>) -> Unit
+)
+```
+* Added function to submit a user created food to the nutritional database. After it's submitted, it will go into the review queue, and if it passes all the checks, will be available to fetch using all of the SDK APIs
+```
+fun submitUserCreatedFoodItem(
+    foodItem: PassioFoodItem,
+    callback: (result: PassioResult<Boolean>) -> Unit
+)
+```
+
+### Refactored APIs
+
+* ```fetchFoodItemForDataInfo``` now accepts two optional parameters, **servingQuantity** and **servingUnit**. If provided, the fetched PassioFoodItem will set the given unit and quantity.
+
+* ```fetchTagsFor``` and ```fetchInflammatoryEffectData``` are now invoked using a **refCode** instead of the previous *PassioID*.
+
+* **InflammatoryEffectData** has an added propery called ```foodName``` that notes the ingredient of the available **nutrient**.
+
+* ```refCode``` has been added to the **PassioFoodDataInfo**.
+
 ## V3.2.0
 
 ### Added APIs
