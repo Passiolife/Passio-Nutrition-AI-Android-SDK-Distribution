@@ -2,6 +2,26 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V3.2.2
+
+### Added APIs
+
+* Added a new search function that provides contextually connected items to the search term:
+```
+fun searchForFoodSemantic(
+    term: String,
+    callback: (result: List<PassioFoodDataInfo>, searchOptions: List<String>) -> Unit
+)
+```
+* Added a new api for a recipe builder feature, that gives a list of predicted next ingredients based on the current list of ingredients in the recipe:
+```
+fun predictNextIngredients(
+    currentIngredients: List<String>,
+    callback: (result: List<PassioFoodDataInfo>) -> Unit
+)
+```
+
+
 ## V3.2.1
 
 ### Added APIs
