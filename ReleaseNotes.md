@@ -2,6 +2,17 @@
 
 Full project was build with **Kotlin 1.6.10**
 
+## V3.2.4
+
+### Added APIs
+
+* Added two new parameters to the *PassioConfiguration* object: ```proxyUrl``` and ```proxyHeaders```. If supplied, the SDK will use the proxyUrl value as a base url when executing networking calls, and will append the provided proxyHeaders to the request iself. When proxyUrl is provided, the SDK operates in *remoteOnly* state.
+
+### Removed APIs
+
+* Removed function ```detectFoodIn```. Instead, *recognizeImageRemote* should be used
+
+
 ## V3.2.2
 
 ### Added APIs
