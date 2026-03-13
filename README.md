@@ -1,6 +1,6 @@
 # Passio Nutrition-AI Android SDK
 
-[![platform](https://img.shields.io/badge/platform-Android-lightgray)]() [![minimum](https://img.shields.io/badge/minimum--supported--version-26-lightgray)](https://developer.android.com/about/versions/oreo)
+[![platform](https://img.shields.io/badge/platform-Android-34A853?logo=android&logoColor=white)]() [![minimum](https://img.shields.io/badge/min%20SDK-26-blue)](https://developer.android.com/about/versions/oreo)
 
 > **Note:** This GitHub repository is no longer the primary distribution channel for the SDK.
 > Install the latest version from **Maven Central**:
@@ -9,9 +9,7 @@
 > implementation("ai.passio.passiosdk:nutrition-ai:3.2.14")
 > ```
 
-## Overview
-
-Welcome to the Passio Nutrition-AI Android SDK!
+### Welcome to the Passio Nutrition-AI Android SDK!
 
 The SDK provides food recognition and nutrition intelligence for your app through Passio's APIs. To get started, sign up for a key at [passio.ai/nutrition-ai](https://www.passio.ai/nutrition-ai).
 
@@ -24,11 +22,8 @@ The SDK provides food recognition and nutrition intelligence for your app throug
 - **Voice Logging** — Parse natural language into structured food entries
 - **Full Nutrition Data** — Macronutrients, 20+ micronutrients, serving sizes and more
 
-## Documentation
+### Documentation
 
-| | Link |
-|---|---|
-| **Full Documentation** | [Nutrition AI Docs](https://passio.gitbook.io/nutrition-ai) |
-| **Android SDK Guide** | [Android SDK Docs](https://passio.gitbook.io/nutrition-ai/mobile-sdks/android-sdk-docs) |
+**[Full Documentation](https://passio.gitbook.io/nutrition-ai)** · **[Android SDK Guide](https://passio.gitbook.io/nutrition-ai/mobile-sdks/android-sdk-docs)**
 
 <sup>Copyright 2026 Passio Inc</sup>
